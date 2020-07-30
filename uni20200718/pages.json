@@ -3,7 +3,10 @@
 		{
 			"path": "pages/xiangmu/xiangmu",
 			"style": {
-				"navigationBarTitleText": "项目管理"
+				"navigationBarTitleText": "项目管理",
+				"enablePullDownRefresh":true//启用下拉样式
+				
+				
 			}
 		}
 	],
@@ -11,6 +14,7 @@
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"onReachBottomDistance":50//底部距离为50px时候触发事件
 	}
 }
