@@ -47,24 +47,24 @@
 		onLoad() {
 			var vm=this;		
 				vm.get();				
-			 setTimeout(function () {
-			            console.log('start pulldown');
-			        }, 1000);
-			        uni.startPullDownRefresh();
+			 // setTimeout(function () {
+			 //            console.log('start pulldown');
+			 //        }, 1000);
+			 //        uni.startPullDownRefresh();
 		},
-		onReachBottom() {
-			var vm=this;
-			//上滑触底事件
+		onReachBottom() {//上滑触底事件
+			var vm=this;		
 			
 			//如果页面的当前页码小于最大页码，可以累加
 			if(vm.current_page<vm.total_page){
 				vm.current_page++;
+				vm.get();
 			}
 			console.log('上滑后的页码是：'+vm.current_page)
 		},
-		onPullDownRefresh() {
+		onPullDownRefresh() {//下拉事件
 			var vm=this;
-			//下拉事件
+			
 			//1秒后关闭下拉样式
 			 setTimeout(function () {
 			            uni.stopPullDownRefresh();
@@ -73,6 +73,7 @@
 					//如果当前页码>1,可以累减
 					if(vm.current_page>1){
 						vm.current_page--
+						vm.get();
 					}
 					console.log('下拉后的页码是'+vm.current_page)
 		},
@@ -85,7 +86,12 @@
 					})
 					uniCloud.callFunction({
 						name: 'get',
-						data:{"table":"xiangmu"}
+						//传入的参数有表名，当前页码，每页记录的数量
+						data:{
+							"table":"xiangmu",
+						"current_page":vm.current_page,
+						"page_size":vm.page_size
+						}
 					}).then((res) => {
 						uni.hideLoading()
 						//将返回 值赋值给变量
