@@ -1,6 +1,7 @@
 'use strict';
 const db = uniCloud.database()
 exports.main = async (event, context) => {
+
 	//获取前端传来的参数集合event
 	var page_size=event.page_size;
 	var current_page=event.current_page;	
@@ -19,6 +20,11 @@ exports.main = async (event, context) => {
 	}else{
 		total_page=result+1;
 	}
+
+
+	console.log("参数event："+JSON.stringify(event));
+	// console.log("参数contex:"+JSON.stringify(context))
+	const collection = db.collection(event.table)
 
 	const res = await collection.limit(10).get()
 	 console.log('云函数返回的结果：'+JSON.stringify(res.data))
