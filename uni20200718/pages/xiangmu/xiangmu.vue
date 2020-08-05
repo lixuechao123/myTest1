@@ -23,16 +23,7 @@
 					<td class='scroll-view-item_H'>{{item.note}}</td>	
 					</tr>
 
-					<tr  v-for="(item,index) in xiangmu_list" :key='index'>
-						<td>{{index}}</td>
-					<!-- <td class='scroll-view-item_H'>{{item.name}}</td>
-					<td class='scroll-view-item_H'>{{item.beginTime}}</td>
-					<td class='scroll-view-item_H'>{{item.endTime}}</td>
-					<td class='scroll-view-item_H'>{{item.isOver}}</td>
-					<td class='scroll-view-item_H'>{{item.note}}</td>	 -->
-					</tr>
-
-					
+										
 					
 					
 				</table>
@@ -49,15 +40,16 @@
 
 			return{
 				xiangmu_list:[],//当前页的列表对象集合
-				page_size:3,//没页的记录数量，
+				page_size:5,//没页的记录数量，
 				current_page:1,//当前的页码
 				total_page:10//页面总数
 			}
 			
 		},
 		onLoad() {
+			
 			var vm=this;		
-				vm.get();				
+				vm.get_total_page();				
 			 // setTimeout(function () {
 			 //            console.log('start pulldown');
 			 //        }, 1000);
@@ -90,29 +82,51 @@
 
 			xiangmu_list:[]
 		},
-		onLoad() {
 		
-		},
-		onShow(){
-			console.log('loglog')
-				this.get();
-				
-			console.log("onloud:"+JSON.stringify(this.xiangmu_list))
-
-		},
 			methods: {
-				get() {
+				get_total_page(){
 					//当前页面的vue实例
 					var vm=this;
 					uni.showLoading({
 						title: '处理中...'
-
+					
 					})
 					uniCloud.callFunction({
-						name: 'get',
+						name: 'get_total_page',
 						//传入的参数有表名，当前页码，每页记录的数量
 						data:{
-							"table":"xiangmu",
+							"table":"test2",
+						"page_size":vm.page_size
+						}
+					}).then((res) => {
+						//uni.hideLoading()
+						//将返回 值赋值给变量
+						vm.total_page=res.result;
+						console.log("总的页数："+vm.total_page);
+						//获取分页内容
+						vm.get_content();
+						
+					}).catch((err) => {
+						uni.hideLoading()
+						uni.showModal({
+							content: `查询失败，错误信息为：${err.message}`,
+							showCancel: false
+						})
+						console.error(err)
+					})
+				},
+				get_content() {
+					//当前页面的vue实例
+					var vm=this;
+					// uni.showLoading({
+					// 	title: '处理中...'
+
+					// })
+					uniCloud.callFunction({
+						name: 'get_content',
+						//传入的参数有表名，当前页码，每页记录的数量
+						data:{
+							"table":"test2",
 						"current_page":vm.current_page,
 						"page_size":vm.page_size
 						}
@@ -120,12 +134,7 @@
 						uni.hideLoading()
 						//将返回 值赋值给变量
 						vm.xiangmu_list=res.result.data;
-						// uni.showModal({
-						// 	content: `查询成功，获取数据列表为：${JSON.stringify(res.result.data)}`,
-						// 	showCancel: false
-						// })
-						// console.log("get返回值"+JSON.stringify(vm.xiangmu_list))
-						
+						console.log("返回的分页内容："+JSON.stringify(res))
 					}).catch((err) => {
 						uni.hideLoading()
 						uni.showModal({
@@ -135,35 +144,11 @@
 						console.error(err)
 					})
 
-					})
-					uniCloud.callFunction({
-						name: 'get',
-						data:{"table":"xiangmu"}
-					}).then((res) => {
-						uni.hideLoading()
-						//将返回 值赋值给变量
-						vm.xiangmu_list=res.result.data;
-						// uni.showModal({
-						// 	content: `查询成功，获取数据列表为：${JSON.stringify(res.result.data)}`,
-						// 	showCancel: false
-						// })
-						console.log("get返回值"+JSON.stringify(vm.xiangmu_list))
-						
-					}).catch((err) => {
-						uni.hideLoading()
-						uni.showModal({
-							content: `查询失败，错误信息为：${err.message}`,
-							showCancel: false
-						})
-						console.error(err)
-					})
-
-				},
+					}
 				
 				},
 				
-		
-		
+			
 		}
 </script>
 
