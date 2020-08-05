@@ -4,8 +4,15 @@
 			"path": "pages/xiangmu/xiangmu",
 			"style": {
 				"navigationBarTitleText": "项目管理",
-				"enablePullDownRefresh":true//启用下拉样式
+				"enablePullDownRefresh":true//启用下拉样式				
 				
+			}
+		},
+		{
+			"path": "pages/xiangmu_update/xiangmu_update",
+			"style": {
+				"navigationBarTitleText": "项目编辑"
+			//	"enablePullDownRefresh":true//启用下拉样式				
 				
 			}
 		}

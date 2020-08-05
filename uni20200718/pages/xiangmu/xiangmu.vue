@@ -1,9 +1,12 @@
 <template>
 	<view class="content">
 	
-		
+		<view class="p0">
+			<button @click="update(0)"></button>
+		</view>
 		
 		<view class="p1">
+			
 			<scroll-view class="scroll-view_H" scroll-x="true" @scroll="scroll" scroll-left="120">
 				<table>
 					<tr>
@@ -20,19 +23,11 @@
 					<td class='scroll-view-item_H'>{{item.beginTime}}</td>
 					<td class='scroll-view-item_H'>{{item.endTime}}</td>
 					<td class='scroll-view-item_H'>{{item.isOver}}</td>
-					<td class='scroll-view-item_H'>{{item.note}}</td>	
+					<td class='scroll-view-item_H'>{{item.note}}</td>
+						<td><button @click="update(item.id)">编辑</button></td>
 					</tr>
 
-					<tr  v-for="(item,index) in xiangmu_list" :key='index'>
-						<td>{{index}}</td>
-					<!-- <td class='scroll-view-item_H'>{{item.name}}</td>
-					<td class='scroll-view-item_H'>{{item.beginTime}}</td>
-					<td class='scroll-view-item_H'>{{item.endTime}}</td>
-					<td class='scroll-view-item_H'>{{item.isOver}}</td>
-					<td class='scroll-view-item_H'>{{item.note}}</td>	 -->
-					</tr>
-
-					
+										
 					
 					
 				</table>
@@ -49,19 +44,17 @@
 
 			return{
 				xiangmu_list:[],//当前页的列表对象集合
-				page_size:3,//没页的记录数量，
+				page_size:5,//没页的记录数量，
 				current_page:1,//当前的页码
 				total_page:10//页面总数
 			}
 			
 		},
 		onLoad() {
+			
 			var vm=this;		
-				vm.get();				
-			 // setTimeout(function () {
-			 //            console.log('start pulldown');
-			 //        }, 1000);
-			 //        uni.startPullDownRefresh();
+				vm.get_total_page();				
+			
 		},
 		onReachBottom() {//上滑触底事件
 			var vm=this;		
@@ -69,7 +62,10 @@
 			//如果页面的当前页码小于最大页码，可以累加
 			if(vm.current_page<vm.total_page){
 				vm.current_page++;
-				vm.get();
+				vm.get_total_page();
+				console.log("触发了上滑触底事件")
+			}else{
+				console.log("没有触发上滑触底事件")
 			}
 			console.log('上滑后的页码是：'+vm.current_page)
 		},
@@ -83,33 +79,69 @@
 			        }, 1000);
 					//如果当前页码>1,可以累减
 					if(vm.current_page>1){
-						vm.current_page--
-						vm.get();
+						vm.current_page--;
+						vm.get_total_page();
+						console.log("下拉事件触发了")
+					}else{
+						console.log("下拉事件没有触发")
 					}
+					
 					console.log('下拉后的页码是'+vm.current_page)
 
-			xiangmu_list:[]
+			
 		},
-		onLoad() {
 		
-		},
-		onShow(){
-			console.log('loglog')
-				this.get();
-				
-			console.log("onloud:"+JSON.stringify(this.xiangmu_list))
-
-		},
 			methods: {
-				get() {
+				update(id){
+					if(id==0){
+						
+					}else{
+						uni.setStorageSync("xiangmu_id",id);
+						uni.navigateTo({
+							url:"../xiangmu_update/xiangmu_update"
+						})
+					}
+				},
+				get_total_page(){
 					//当前页面的vue实例
 					var vm=this;
 					uni.showLoading({
 						title: '处理中...'
-
+					
 					})
 					uniCloud.callFunction({
-						name: 'get',
+						name: 'get_total_page',
+						//传入的参数有表名，当前页码，每页记录的数量
+						data:{
+							"table":"xiangmu",
+						"page_size":vm.page_size
+						}
+					}).then((res) => {
+						//uni.hideLoading()
+						//将返回 值赋值给变量
+						vm.total_page=res.result;
+						console.log("总的页数："+vm.total_page);
+						//获取分页内容
+						vm.get_content();
+						
+					}).catch((err) => {
+						uni.hideLoading()
+						uni.showModal({
+							content: `查询失败，错误信息为：${err.message}`,
+							showCancel: false
+						})
+						console.error(err)
+					})
+				},
+				get_content() {
+					//当前页面的vue实例
+					var vm=this;
+					// uni.showLoading({
+					// 	title: '处理中...'
+
+					// })
+					uniCloud.callFunction({
+						name: 'get_content',
 						//传入的参数有表名，当前页码，每页记录的数量
 						data:{
 							"table":"xiangmu",
@@ -120,12 +152,7 @@
 						uni.hideLoading()
 						//将返回 值赋值给变量
 						vm.xiangmu_list=res.result.data;
-						// uni.showModal({
-						// 	content: `查询成功，获取数据列表为：${JSON.stringify(res.result.data)}`,
-						// 	showCancel: false
-						// })
-						// console.log("get返回值"+JSON.stringify(vm.xiangmu_list))
-						
+						console.log("返回的分页内容："+JSON.stringify(res))
 					}).catch((err) => {
 						uni.hideLoading()
 						uni.showModal({
@@ -135,35 +162,11 @@
 						console.error(err)
 					})
 
-					})
-					uniCloud.callFunction({
-						name: 'get',
-						data:{"table":"xiangmu"}
-					}).then((res) => {
-						uni.hideLoading()
-						//将返回 值赋值给变量
-						vm.xiangmu_list=res.result.data;
-						// uni.showModal({
-						// 	content: `查询成功，获取数据列表为：${JSON.stringify(res.result.data)}`,
-						// 	showCancel: false
-						// })
-						console.log("get返回值"+JSON.stringify(vm.xiangmu_list))
-						
-					}).catch((err) => {
-						uni.hideLoading()
-						uni.showModal({
-							content: `查询失败，错误信息为：${err.message}`,
-							showCancel: false
-						})
-						console.error(err)
-					})
-
-				},
+					}
 				
 				},
 				
-		
-		
+			
 		}
 </script>
 
