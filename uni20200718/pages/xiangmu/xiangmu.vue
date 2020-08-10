@@ -23,8 +23,12 @@
 					<td class='scroll-view-item_H'>{{item.beginTime}}</td>
 					<td class='scroll-view-item_H'>{{item.endTime}}</td>
 					<td class='scroll-view-item_H'>{{item.isOver}}</td>
+<<<<<<< HEAD
 					<td class='scroll-view-item_H'>{{item.note}}</td>
 						<td><button @click="update(item.id)">编辑</button></td>
+=======
+					<td class='scroll-view-item_H'>{{item.note}}</td>	
+>>>>>>> 72bfe975bf3cbfe54b3a417c5b51e1c476890f15
 					</tr>
 
 										
@@ -54,7 +58,14 @@
 			
 			var vm=this;		
 				vm.get_total_page();				
+<<<<<<< HEAD
 			
+=======
+			 // setTimeout(function () {
+			 //            console.log('start pulldown');
+			 //        }, 1000);
+			 //        uni.startPullDownRefresh();
+>>>>>>> 72bfe975bf3cbfe54b3a417c5b51e1c476890f15
 		},
 		onReachBottom() {//上滑触底事件
 			var vm=this;		
@@ -92,6 +103,7 @@
 		},
 		
 			methods: {
+<<<<<<< HEAD
 				update(id){
 					if(id==0){
 						
@@ -102,6 +114,8 @@
 						})
 					}
 				},
+=======
+>>>>>>> 72bfe975bf3cbfe54b3a417c5b51e1c476890f15
 				get_total_page(){
 					//当前页面的vue实例
 					var vm=this;
@@ -113,7 +127,11 @@
 						name: 'get_total_page',
 						//传入的参数有表名，当前页码，每页记录的数量
 						data:{
+<<<<<<< HEAD
 							"table":"xiangmu",
+=======
+							"table":"test2",
+>>>>>>> 72bfe975bf3cbfe54b3a417c5b51e1c476890f15
 						"page_size":vm.page_size
 						}
 					}).then((res) => {
@@ -144,7 +162,11 @@
 						name: 'get_content',
 						//传入的参数有表名，当前页码，每页记录的数量
 						data:{
+<<<<<<< HEAD
 							"table":"xiangmu",
+=======
+							"table":"test2",
+>>>>>>> 72bfe975bf3cbfe54b3a417c5b51e1c476890f15
 						"current_page":vm.current_page,
 						"page_size":vm.page_size
 						}
