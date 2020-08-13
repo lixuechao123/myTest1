@@ -2,7 +2,7 @@
 	<view class="content">
 	
 		<view class="p0">
-			<button @click="update(0)"></button>
+			<button @click="update(0)">新增</button>
 		</view>
 		
 		<view class="p1">
@@ -97,15 +97,12 @@
 			methods: {
 
 				update(id){
-					if(id==0){
-						
-					}else{
-						uni.setStorageSync("xiangmu_id",id);
+				
 						uni.navigateTo({
-							url:"../xiangmu_update/xiangmu_update?id="+id,
+							url:"../xiangmu_update/xiangmu_update?id="+id
 							
 						})
-					}
+					
 				},
 
 
