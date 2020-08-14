@@ -1,0 +1,12 @@
+// 本文件中的json内容将在云函数【运行】时作为参数传给云函数。
+// 配置教程参考：https://uniapp.dcloud.net.cn/uniCloud/quickstart?id=runparam
+{"table":"xiangmu","id":0,
+"content":{
+  "beginTime": "2020-10-10 ",
+  "endTime": "2020-12-12",
+  "isOver": 0,
+  "name": "555",
+  "note": "3333"
+}
+// "content":{"_id":"abd27dd45f313c43005bcb0c00a3e945","name":"ttt"}
+}
