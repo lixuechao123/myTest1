@@ -2,7 +2,25 @@
 	<view class="content">
 	
 		<view class="p0">
-			<button @click="update(0)">新增</button>
+			<table>
+				<tr>
+					<td>
+					<input placeholder="项目名" v-model="xiangmu_name" />
+					</td>
+					<td>
+						<button @click="get_total_page()">搜索</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button @click="update(0)">新增</button>
+					</td>
+					<td>
+						<button>导入</button>
+					</td>
+				</tr>
+			</table>
+			
 		</view>
 		
 		<view class="p1">
@@ -26,7 +44,7 @@
 
 					<td class='scroll-view-item_H'>{{item.note}}</td>
 						<td><button @click="update(item._id)">编辑</button></td>
-
+                       <td><button @click="remove(item._id)">删除</button></td>
 
 					</tr>
 
@@ -49,15 +67,19 @@
 				xiangmu_list:[],//当前页的列表对象集合
 				page_size:5,//没页的记录数量，
 				current_page:1,//当前的页码
-				total_page:10//页面总数
+				total_page:10,//页面总数
+				xiangmu_name:""
 			}
 			
 		},
 		onLoad() {
 			
-			var vm=this;		
-				vm.get_total_page();				
+					
 
+		},
+		onShow() {
+			var vm=this;
+				vm.get_total_page();	
 		},
 		onReachBottom() {//上滑触底事件
 			var vm=this;		
@@ -95,6 +117,25 @@
 		},
 		
 			methods: {
+				remove(id){
+					var vm=this;
+					uniCloud.callFunction({
+						name:"remove_one",
+						data:{
+						"table":"xiangmu",
+						"id":id
+						}
+					}).then((res)=>{
+						vm.get_total_page();
+						uni.showToast({
+							title:"删除成功"
+						})
+					}).catch((err)=>{
+						uni.showToast({
+							title:"删除失败"+err.message
+						})
+					})
+				},
 
 				update(id){
 				
@@ -113,13 +154,20 @@
 						title: '处理中...'
 					
 					})
+					var where="";
+					if(vm.xiangmu_name!=""){
+						where={"name":vm.xiangmu_name};
+					}
 					uniCloud.callFunction({
+						
+						
 						name: 'get_total_page',
 						//传入的参数有表名，当前页码，每页记录的数量
 						data:{
 
 							"table":"xiangmu",
-						"page_size":vm.page_size
+						"page_size":vm.page_size,
+						"where":where
 						}
 					}).then((res) => {
 						//uni.hideLoading()
@@ -141,10 +189,10 @@
 				get_content() {
 					//当前页面的vue实例
 					var vm=this;
-					// uni.showLoading({
-					// 	title: '处理中...'
-
-					// })
+					var where="";
+					if(vm.xiangmu_name!=""){
+						where={"name":vm.xiangmu_name};
+					}
 					uniCloud.callFunction({
 						name: 'get_content',
 						//传入的参数有表名，当前页码，每页记录的数量
@@ -152,7 +200,8 @@
 
 							"table":"xiangmu",
 						"current_page":vm.current_page,
-						"page_size":vm.page_size
+						"page_size":vm.page_size,
+						"where":where
 						}
 					}).then((res) => {
 						uni.hideLoading()

@@ -60,7 +60,7 @@
 				}
 			}).then((res)=>{
 				uni.showToast({
-					title:"保存成功"+res
+					title:"保存成功"
 				})
 			}).catch((err)=>{
 				console.log("保存失败"+err.message)

@@ -7,7 +7,22 @@ exports.main = async (event, context) => {
 //	var current_page=event.current_page;		
 	const collection = db.collection(event.table);
 	//获得记录的数量
-	var res=await collection.count();
+	var res;
+	if(event.where==""){
+		res=await collection.count();
+	}else{		
+		
+		// var  obj=new RegExp('^项目');
+		// console.log("查询条件："+JSON.stringify(obj))
+		// res=await collection.where({"name":new RegExp('^项目'),"del":new RegExp('^0')}).count();
+		res=await collection.where({
+			"name":new RegExp('^项目'),
+			"note":new RegExp('.*备注.*')
+			
+		}).count()
+	}
+	
+
 	 var record_num=res.total;
 	 console.log('记录总数：'+record_num)
 	/*计算出总共的页码数量*/
